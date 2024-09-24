@@ -1,0 +1,14 @@
+
+.pagination-button {
+  background: #ffffff;
+  margin: 5px;
+  border: 1px solid #c7c6c6;
+}
+.pagination-button:hover{
+  background: #ffffff;
+  margin: 5px;
+  border: 1px solid #c7c6c6;
+}
+.pagination {
+  margin-top: 20px;
+}
