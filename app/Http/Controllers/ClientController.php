@@ -44,6 +44,43 @@ class ClientController extends Controller
     }
 
 
+    public function clientStoreAjax(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'phone' => 'required',
+            'email' => 'required|email|unique:customers,email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $customer = new Customer();
+            $customer->name = $request->name;
+            $customer->email = $request->email;
+            $customer->phone = $request->phone;
+            $customer->save();
+
+            // Return the new customer data
+            return response()->json([
+                'success' => true,
+                'customer' => $customer,
+                'message' => 'Customer added successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+
     public function customerDetail($id)
     {
         $user = Customer::find($id);

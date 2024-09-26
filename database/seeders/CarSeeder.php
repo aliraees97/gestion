@@ -15,18 +15,21 @@ class CarSeeder extends Seeder
     {
         $rec = [
             [
+
                 'name' => 'Tesla',
                 'model' => 206,
                 'license_plate' => 'TS100',
                 'color' => 'Silver',
             ],
             [
+
                 'name' => 'Carola',
                 'model' => 105,
                 'license_plate' => 'CR105',
                 'color' => 'White',
             ],
             [
+
                 'name' => 'Benz',
                 'model' => 989,
                 'license_plate' => 'M200',
@@ -37,6 +40,7 @@ class CarSeeder extends Seeder
 
         foreach ($rec as $key => $value) {
             Car::create([
+
                 'name' => $value['name'],
                 'model' => $value['model'],
                 'license_plate' => $value['license_plate'],

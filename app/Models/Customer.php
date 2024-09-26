@@ -17,4 +17,9 @@ class Customer extends Model
         'phone',
         'note',
     ];
+
+    public function cars()
+    {
+        return $this->hasMany(Car::class, 'customer_id');
+    }
 }

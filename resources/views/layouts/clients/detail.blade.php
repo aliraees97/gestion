@@ -22,12 +22,13 @@
                             @include('partials.message')
                             <div class="nk-block-between g-3">
                                 <div class="nk-block-head-content">
-                                    <h3 class="nk-block-title page-title"><strong
-                                            class="text-primary small">{{ ucfirst($user->name) }} Detalles</strong></h3>
+                                    <h3 class="nk-block-title page-title">
+                                        <strong class="text-primary small">{{ ucfirst($user->name) }} Detalles</strong>
+                                    </h3>
 
                                 </div>
                                 <div class="nk-block-head-content">
-                                    <a href="/admin/clients"
+                                    <a href="{{ route('clients') }}"
                                         class="btn btn-outline-light bg-white d-none d-sm-inline-flex"><em
                                             class="icon ni ni-arrow-left"></em><span>Atrás</span></a>
 
@@ -97,9 +98,22 @@
                                                                         class="badge bg-primary me-1">{{ htmlspecialchars($service) }}</span>
                                                                 @endforeach
                                                             </div>
-                                                            <div class="nk-tb-col tb-col-md">
+                                                            {{-- <div class="nk-tb-col tb-col-md">
                                                                 <span class="timer"
                                                                     data-created-at="{{ $rec->created_at }}"></span>
+                                                            </div> --}}
+
+                                                            <div class="nk-tb-col tb-col-md">
+
+                                                                @if ($rec->car->status != 'completed')
+                                                                    <p>
+                                                                        <span class="timer"
+                                                                            data-created-at="<?php echo $rec->created_at; ?>"></span>
+                                                                    </p>
+                                                                @else
+                                                                    <span class="tb-status text-success">Done</span>
+                                                                @endif
+
                                                             </div>
 
 

@@ -8,6 +8,7 @@
 
     <!-- wrap @s -->
     <div class="nk-wrap ">
+
         <!-- main header @s -->
         @include('partials._header')
         <!-- main header @e -->
@@ -37,39 +38,34 @@
                                             <ul class="nk-block-tools g-3">
                                                 <li>
                                                     @if ($record->count() > 0)
-                                                        @php $canClose = false; @endphp
-                                                        @foreach ($record as $rec)
-                                                            @if ($rec->status == 'open' && \Carbon\Carbon::parse($rec->created_at)->isToday())
-                                                                @php
-                                                                    $canClose = true;
-                                                                    break;
-                                                                @endphp
-                                                            @endif
-                                                        @endforeach
+                                                        @php
+                                                            $openExists = $record->contains('status', 'open');
+                                                        @endphp
 
-                                                        @if ($canClose)
+                                                        @if ($openExists)
                                                             <button class="btn btn-white btn-dim btn-outline-light"
                                                                 data-toggle="modal" data-target="#modalSaleClose">
                                                                 <em
                                                                     class="d-none d-sm-inline icon ni ni-calender-date"></em>
                                                                 <span>
                                                                     <span class="d-none d-md-inline">Cerrar la oferta de
-                                                                        hoy
-                                                                    </span>
+                                                                        hoy</span>
+                                                                </span>
+                                                            </button>
+                                                        @else
+                                                            <button class="btn btn-white btn-dim btn-outline-light"
+                                                                data-toggle="modal" data-target="#modalNoData">
+                                                                <em
+                                                                    class="d-none d-sm-inline icon ni ni-calender-date"></em>
+                                                                <span>
+                                                                    <span class="d-none d-md-inline">View Closed
+                                                                        Sales</span>
+                                                                </span>
                                                             </button>
                                                         @endif
-                                                    @else
-                                                        <button class="btn btn-white btn-dim btn-outline-light"
-                                                            data-toggle="modal" data-target="#modalNoData">
-                                                            <em
-                                                                class="d-none d-sm-inline icon ni ni-calender-date"></em>
-                                                            <span>
-                                                                <span class="d-none d-md-inline">View</span> Closed
-                                                                Sales
-                                                            </span>
-                                                        </button>
                                                     @endif
                                                 </li>
+
 
                                             </ul>
                                         </div>
@@ -94,16 +90,10 @@
                                                 <div class="data">
                                                     <div class="data-group">
                                                         <div class="amount">{{ $customer->count() }}</div>
-                                                        <div class="nk-ecwg6-ck">
-                                                            <canvas class="ecommerce-line-chart-s3"
-                                                                id="todayOrders"></canvas>
-                                                        </div>
+
                                                     </div>
 
-                                                    {{-- <div class="info"><span class="change up text-danger"><em
-                                                                class="icon ni ni-arrow-long-up"></em>4.63%</span><span>
-                                                            vs. last week</span>
-                                                    </div> --}}
+
 
                                                 </div>
                                             </div>
@@ -119,23 +109,24 @@
                                         <div class="nk-ecwg nk-ecwg6">
                                             <div class="card-inner">
                                                 <div class="card-title-group">
+
                                                     <div class="card-title">
                                                         <h6 class="title">Autos en Proceso</h6>
                                                     </div>
+
                                                 </div>
+
                                                 <div class="data">
                                                     <div class="data-group">
                                                         <div class="amount">{{ $car->count() }}</div>
+
                                                         <div class="nk-ecwg6-ck">
-                                                            <canvas class="ecommerce-line-chart-s3"
-                                                                id="todayRevenue"></canvas>
+
                                                         </div>
+
                                                     </div>
 
-                                                    {{-- <div class="info"><span class="change down text-danger"><em
-                                                                class="icon ni ni-arrow-long-down"></em>2.34%</span><span>
-                                                            vs. last week</span>
-                                                    </div> --}}
+
                                                 </div>
 
                                             </div>
@@ -159,15 +150,8 @@
                                                     <div class="data-group">
                                                         <div class="amount">{{ $recordCars->count() }}</div>
                                                         <div class="nk-ecwg6-ck">
-                                                            <canvas class="ecommerce-line-chart-s3"
-                                                                id="todayCustomers"></canvas>
                                                         </div>
                                                     </div>
-
-                                                    {{-- <div class="info"><span class="change up text-danger"><em
-                                                                class="icon ni ni-arrow-long-up"></em>4.63%</span><span>
-                                                            vs. last week</span>
-                                                    </div> --}}
 
                                                 </div>
                                             </div><!-- .card-inner -->
@@ -188,15 +172,10 @@
                                                     <div class="data-group">
                                                         <div class="amount">{{ $record->count() }}</div>
                                                         <div class="nk-ecwg6-ck">
-                                                            <canvas class="ecommerce-line-chart-s3"
-                                                                id="todayVisitors"></canvas>
+
                                                         </div>
                                                     </div>
 
-                                                    {{-- <div class="info"><span class="change down text-danger"><em
-                                                                class="icon ni ni-arrow-long-down"></em>2.34%</span><span>
-                                                            vs. last week</span>
-                                                    </div> --}}
 
                                                 </div>
 

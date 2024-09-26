@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -12,13 +13,16 @@ class CarController extends Controller
 
     public function index()
     {
-        $cars = Car::paginate();
+
+        // $cars = Car::with('customerCar')->paginate();
+        $cars = Car::paginate(10);
+        // dd($cars);
         return view('layouts.car.index', compact('cars'));
     }
 
-
     public function carStore(Request $request)
     {
+        // dd($request->all());
         try {
 
             $car = new Car();
@@ -30,6 +34,20 @@ class CarController extends Controller
 
             Session::flash('success_message', 'Great! Car has been saved successfully!');
             return redirect()->back();
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function carStoreAjax(Request $request)
+    {
+
+        try {
+            $car = Car::create($request->all());
+            return response()->json([
+                'success' => true,
+                'car' => $car
+            ]);
         } catch (\Exception $e) {
             return $e->getMessage();
         }

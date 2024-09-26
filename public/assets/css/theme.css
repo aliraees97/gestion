@@ -12,3 +12,9 @@
 .pagination {
   margin-top: 20px;
 }
+
+
+#modalCar, #modalClient {
+  background-color: #0000008c;
+}
+

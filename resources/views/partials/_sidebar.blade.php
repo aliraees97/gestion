@@ -40,7 +40,6 @@
                         </li>
 
                         <!-- .nk-menu-item -->
-
                         <li class="nk-menu-item">
                             <a href="{{ route('gestion') }}" class="nk-menu-link">
                                 <span class="nk-menu-icon">
@@ -51,10 +50,7 @@
                             </a>
                         </li>
 
-
-
                         <!-- .nk-menu-item -->
-
                         <li class="nk-menu-item">
                             <a href="{{ route('clients') }}" class="nk-menu-link">
                                 <span class="nk-menu-icon"><em class="icon ni ni-user-list-fill"></em></span>
@@ -62,9 +58,7 @@
                             </a>
                         </li>
 
-
                         <!-- .nk-menu-item -->
-
                         <li class="nk-menu-item">
                             <a href="{{ route('car') }}" class="nk-menu-link">
                                 <span class="nk-menu-icon">
@@ -74,10 +68,7 @@
                             </a>
                         </li>
 
-
-
                         <!-- .nk-menu-item -->
-
                         <li class="nk-menu-item">
                             <a href="{{ route('wash-type') }}" class="nk-menu-link">
                                 <span class="nk-menu-icon">
@@ -90,7 +81,6 @@
                         </li>
 
                         <!-- .nk-menu-item -->
-
                         <li class="nk-menu-item">
                             <a href="{{ route('service') }}" class="nk-menu-link">
                                 <span class="nk-menu-icon"><em class="icon ni ni-list-thumb"></em></span>
@@ -100,7 +90,6 @@
 
 
                         <!-- .nk-menu-item -->
-
                         <li class="nk-menu-item">
                             <a href="{{ route('payment-types') }}" class="nk-menu-link">
                                 <span class="nk-menu-icon"><em class="icon ni ni-master-card"></em></span>
@@ -110,9 +99,6 @@
                         </li>
 
 
-
-
-                        <!-- .nk-menu-item -->
 
                         {{-- <li class="nk-menu-heading">
                           <h6 class="overline-title text-primary-alt">Applications</h6>

@@ -36,20 +36,16 @@
                                 <div class="brand-logo pb-5">
                                     <a href="/" class="logo-link">
                                         <h2>Gestion</h2>
-                                        {{-- <img class="logo-light logo-img logo-img-lg" src="./images/logo.png"
-                                            srcset="./images/logo2x.png 2x" alt="logo">
-                                        <img class="logo-dark logo-img logo-img-lg" src="./images/logo-dark.png"
-                                            srcset="./images/logo-dark2x.png 2x" alt="logo-dark"> --}}
+
                                     </a>
                                 </div>
                                 <div class="nk-block-head">
                                     <div class="nk-block-head-content">
                                         <h4 class="nk-block-title">LogIn de Lavadero</h4>
-                                        {{-- <div class="nk-block-des">
-                                            <p>Access the DashLite panel using your email and passcode.</p>
-                                        </div> --}}
+
                                     </div>
-                                </div><!-- .nk-block-head -->
+                                </div>
+                                <!-- .nk-block-head -->
 
                                 <form action="{{ route('authenticate') }}" method="POST" autocomplete="off">
                                     @csrf
@@ -129,6 +125,7 @@
         <!-- main @e -->
     </div>
     <!-- app-root @e -->
+
     <!-- JavaScript -->
     <script src="{{ asset('assets/js/bundle.js?ver=3.2.3') }}"></script>
     <script src="{{ asset('assets/js/scripts.js?ver=3.2.3') }}"></script>

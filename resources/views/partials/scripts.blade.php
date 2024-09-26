@@ -349,9 +349,9 @@
             // Record Sale Update Script S
 
 
-            $('#editrecord').on('click', function() {
+            $('.editrecord').on('click', function() {
+                event.preventDefault();
                 var recordId = $(this).data('record-id');
-                // alert(recordId);
 
                 // Fetch the existing record data via AJAX
                 $.ajax({
@@ -361,12 +361,15 @@
                         $('#record-id').val(data.id);
                         $('#package-id').val(data.package_id);
                         $('#car-id').val(data.car_id);
-                        $('#services').val(JSON.parse(data
-                            .services));
+                        $('#services').val(JSON.parse(data.services));
                         $('#payment-id').val(data.payment_id);
+
+                        // Open the modal after filling the data
+                        $('#editrecordModal').modal('show');
                     }
                 });
             });
+
 
             $('#editRecordForm').on('submit', function(e) {
                 e.preventDefault();
@@ -537,28 +540,181 @@
             // User note update E
 
 
+            $('.close-modal').on('click', function() {
+                location.reload();
+            });
+
+
+            // for Add New Car on modal  with ajax start
+
+            $('#carModal form').on('submit', function(e) {
+                e.preventDefault();
+
+                // Create a FormData object from the form
+                var formData = new FormData(this);
+
+                // Send the form data using AJAX
+                $.ajax({
+                    // url: $(this).attr('action'),
+                    url: "{{ route('add-car-ajax') }}",
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        // Check if the response was successful
+                        if (response.success) {
+
+                            $('#carModal').modal('hide').removeClass('show').css(
+                                'display',
+                                'none');
+
+                            // Update the car dropdown in the first modal
+                            var newCar = response.car; // Assuming response has new car data
+                            $('#car_id').append(
+                                `<option value="${newCar.id}" selected>${newCar.name}</option>`
+                            );
+
+                            // Optionally, show a success message to the user
+                            // alert('Car added successfully');
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        var errorMessage = xhr.status + ': ' + xhr.statusText;
+                        alert('An error occurred while adding the car: ' + errorMessage);
+                    }
+                });
+            });
+
+            // for add car on modal  with ajax end
+
+
+
+            // for add Client on modal  with ajax end
+
+            $('#modalClient form').on('submit', function(e) {
+                e.preventDefault();
+
+                // Clear previous error messages and success message
+                $('small.text-danger').text('');
+                $('#successMessage').hide().text('');
+
+                // Create a FormData object from the form
+                var formData = new FormData(this);
+
+                // Send the form data using AJAX
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.success) {
+                            // Close the modal
+                            $('#modalClient').modal('hide').removeClass('show').css('display',
+                                'none');
+
+                            // Update the client dropdown in the main modal
+                            var newClient = response.customer;
+                            $('#customer_id').append(
+                                `<option value="${newClient.id}" selected>${newClient.name}</option>`
+                            );
+
+                            // Show success message in the modal
+                            $('#successMessage').text(response.message).show();
+                        } else {
+                            // Show a generic error message
+                            $('#successMessage').text('Error: ' + response.message).show();
+                        }
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 422) {
+                            // Display validation errors next to the input fields
+                            var errors = xhr.responseJSON.errors;
+
+                            if (errors.name) {
+                                $('input[name="name"]').siblings('small').text(errors.name[0]);
+                            }
+                            if (errors.phone) {
+                                $('input[name="phone"]').siblings('small').text(errors.phone[
+                                    0]);
+                            }
+                            if (errors.email) {
+                                $('input[name="email"]').siblings('small').text(errors.email[
+                                    0]);
+                            }
+                        } else {
+                            // Show a general error message
+                            $('#successMessage').text(
+                                'An error occurred while adding the client').show();
+                        }
+                    }
+                });
+            });
+
+            // for add Client on modal  with ajax end
+
+
+
+            // Rocrds filter
+
+            $('.filter-option').click(function(e) {
+                e.preventDefault();
+
+                var filter = $(this).data('filter'); // Get the filter value (open, closed, or all)
+
+                // Show all items if filter is 'all'
+                if (filter === 'all') {
+                    $('.nk-tb-item:not(.nk-tb-head)').show(); // Show only data rows, not the header
+                    $('.no-data').hide(); // Hide 'No data' message
+                } else {
+                    // Hide all data rows first, except the header
+                    $('.nk-tb-item:not(.nk-tb-head)').hide();
+
+                    // Show only the data rows that match the selected status
+                    var filteredItems = $('.nk-tb-item[data-status="' + filter + '"]');
+                    filteredItems.show();
+
+                    // Check if there are any visible items
+                    if (filteredItems.length === 0) {
+                        $('.no-data').show(); // Show 'No data' message
+                    } else {
+                        $('.no-data').hide(); // Hide 'No data' message
+                    }
+                }
+            });
+            // Rocrds filter
+
+
 
         });
 
 
+
+
+
         // for time
+
         document.addEventListener("DOMContentLoaded", function() {
             function updateTimers() {
                 var timers = document.querySelectorAll('.timer');
                 timers.forEach(function(timer) {
+
                     var createdAt = new Date(timer.getAttribute('data-created-at'));
                     var now = new Date();
                     var diff = now - createdAt;
-                    var hours = Math.floor(diff / 3600000);
-                    var minutes = Math.floor((diff % 3600000) / 60000);
-                    var seconds = Math.floor((diff % 60000) / 1000);
+                    var hours = Math.floor(diff / (1000 * 60 * 60));
+                    var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((diff % (1000 * 60)) / 1000);
                     timer.textContent = `${hours}h ${minutes}m ${seconds}s`;
                 });
             }
             setInterval(updateTimers, 1000);
             updateTimers();
-
-
         });
+
         // for time
     </script>

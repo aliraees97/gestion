@@ -49,13 +49,13 @@
 
 
                                                 <li class="nk-block-tools-opt">
-                                                    <a href="#" class="btn btn-icon btn-primary d-md-none"><em
-                                                            class="icon ni ni-plus"></em></a>
-                                                    <button data-toggle="modal" data-target="#modalWash"
-                                                        class="btn btn-primary d-none d-md-inline-flex"><em
+
+                                                    <button class="btn btn-primary d-none d-md-inline-flex "
+                                                        data-toggle="modal" data-target="#modalCar"><em
                                                             class="icon ni ni-plus"></em>
                                                         <span>Add</span>
                                                     </button>
+
                                                 </li>
 
                                             </ul>
@@ -72,6 +72,7 @@
                             <div class="nk-tb-list is-separate mb-3">
                                 <div class="nk-tb-item nk-tb-head">
 
+
                                     <div class="nk-tb-col"><span class="sub-text">Nombre</span></div>
                                     <div class="nk-tb-col"><span class="sub-text">Modelo</span></div>
                                     <div class="nk-tb-col tb-col-mb"><span class="sub-text">Matrícula</span></div>
@@ -84,6 +85,8 @@
 
                                 @foreach ($cars as $car)
                                     <div class="nk-tb-item">
+
+
 
                                         <div class="nk-tb-col tb-col-md">
                                             <span>{{ htmlspecialchars($car->name ?? '') }}</span>
@@ -118,7 +121,6 @@
                                                 <span class="tb-status text-success">Done</span>
                                             @endif
 
-                                            {{-- <p><span class="timer" data-created-at="<?php echo $car->created_at; ?>"></span></p> --}}
                                         </div>
 
 
@@ -207,7 +209,7 @@
 
         {{--  modal start Add New car  --}}
 
-        <div class="modal fade" tabindex="-1" id="modalWash">
+        <div class="modal fade" tabindex="-1" id="modalCar">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"> <a href="#" class="close" data-dismiss="modal"
                         aria-label="Close">
@@ -231,13 +233,15 @@
 
                             <div class="form-group">
                                 <label for="licensePlate">Matrícula </label>
-                                <input type="text" name="license_plate" class="form-control" id="license_plate "
+                                <input type="text" name="license_plate" class="form-control" id="license_plate"
                                     required>
+
                             </div>
 
                             <div class="form-group">
-                                <label for="licensePlate">Color</label>
+                                <label for="color">Color</label>
                                 <input type="text" name="color" class="form-control" id="color " required>
+
                             </div>
 
                             <div class="form-group">
@@ -251,10 +255,10 @@
             </div>
         </div>
 
-        {{-- modal End Add New  Service --}}
+        {{-- modal End Add New  car --}}
 
 
-        <!-- Service Update Modal S -->
+        <!-- car Update Modal S -->
 
         <div class="modal fade" id="editcarModal" tabindex="-1" role="dialog" aria-labelledby="editcarModalLabel"
             aria-hidden="true">
@@ -301,7 +305,77 @@
             </div>
         </div>
 
-        <!-- Service Update Modal E -->
+        <!-- car Update Modal E -->
+
+
+
+
+        {{--  modal start Add New  Client  --}}
+
+        <div class="modal fade" tabindex="-1" id="modalClient">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"> <a href="#" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                        <em class="icon ni ni-cross"></em> </a>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Agregar Nuevo Cliente</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="successMessage" class="alert alert-success" style="display: none;"></div>
+                        <form action="{{ route('add-client-ajax') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="form-group">
+                                <label class="form-label" for="default-01">Nombre del Cliente</label>
+                                <div class="form-control-wrap">
+                                    <input type="text" class="form-control" id="default-01" name="name"
+                                        required>
+                                    @if ($errors->has('name'))
+                                        <small class="text-danger">{{ $errors->first('name') }}</small>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="default-01">Teléfono</label>
+                                <div class="form-control-wrap">
+                                    <input type="text" class="form-control" id="default-01" name="phone">
+                                    @if ($errors->has('phone'))
+                                        <small class="text-danger">{{ $errors->first('phone') }}</small>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="default-01">Correo electrónico
+                                </label>
+                                <div class="form-control-wrap">
+                                    <input type="email" class="form-control" id="default-01" name="email">
+                                    @if ($errors->has('email'))
+                                        <small class="text-danger">{{ $errors->first('email') }}</small>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Guardar Cliente</button>
+
+
+                            </div>
+
+                            {{-- <div class="form-group d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary">Guardar Cliente</button>
+                                <button class="btn btn-danger  ml-auto" data-dismiss="modal"
+                                    aria-label="Close">Cerrar</button>
+                            </div> --}}
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        {{-- modal End Add New  Client --}}
 
 
 

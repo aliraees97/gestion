@@ -45,6 +45,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     // Client Or Customer Routes
     Route::get('/clients', [ClientController::class, 'index'])->name('clients');
     Route::post('/add-client', [ClientController::class, 'clientStore'])->name('add-client');
+    Route::post('/add-client-ajax', [ClientController::class, 'clientStoreAjax'])->name('add-client-ajax');
     Route::get('/customer/{id}', [ClientController::class, 'edit']);
     Route::get('/detail/{id}', [ClientController::class, 'customerDetail']);
     Route::post('/update-client-note', [ClientController::class, 'noteUpdate'])->name('update-client-note');
@@ -80,6 +81,8 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     // Record Sale Close  Routes
     Route::post('/close-todays-sale', [ManagementController::class, 'closeTodaySale'])->name('close.daily.sale');
     Route::get('/get-closed-sales', [ManagementController::class, 'getClosedSales'])->name('get-closed-sales');
+    Route::get('/filter-records', [ManagementController::class, 'filterRecords'])->name('filter.records');
+
 
 
 
@@ -87,6 +90,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     // Cars  Routes
     Route::get('/car', [CarController::class, 'index'])->name('car');
     Route::Post('/add-car', [CarController::class, 'carStore'])->name('add-car');
+    Route::Post('/add-car-ajax', [CarController::class, 'carStoreAjax'])->name('add-car-ajax');
     Route::post('/car/update', [CarController::class, 'carUpdate']);
     Route::get('/delete-car/{id}', [CarController::class, 'carDelete']);
 });

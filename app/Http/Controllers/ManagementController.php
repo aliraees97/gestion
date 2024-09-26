@@ -16,7 +16,6 @@ class ManagementController extends Controller
     public function index()
     {
         $records = RecordSale::with(['customer', 'car', 'package', 'payment'])->latest()->get();
-        // dd($records);
         $customer = Customer::get();
         $cars = Car::get();
         $package = Package::get();
@@ -111,6 +110,12 @@ class ManagementController extends Controller
 
     public function closeTodaySale(Request $request)
     {
+        // Close all sales with 'open' status from previous dates (before today)
+        RecordSale::where('status', 'open')
+            ->whereDate('created_at', '<', today())
+            ->update(['status' => 'closed']);
+
+        // Close all sales with 'open' status from today
         RecordSale::where('status', 'open')
             ->whereDate('created_at', today())
             ->update(['status' => 'closed']);
@@ -128,5 +133,15 @@ class ManagementController extends Controller
             ->paginate(10);
 
         return response()->json($closedSales);
+    }
+
+
+    public function filterRecords(Request $request)
+    {
+        $status = $request->get('status');
+        // Fetch records based on the selected status (open or closed)
+        $records = RecordSale::where('status', $status)->get();
+        // Return the updated HTML partial for the records list
+        return view('partials.records-list', compact('records'))->render();
     }
 }

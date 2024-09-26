@@ -86,17 +86,20 @@
 
 
                                         <div class="nk-tb-col">
-                                            <div class="user-card">
-                                                <div class="user-avatar bg-primary">
-                                                    <span>{{ htmlspecialchars(ucfirst(substr($client->name ?? '', 0, 1))) }}</span>
-                                                </div>
-                                                <div class="user-info">
-                                                    <span class="tb-lead">{{ htmlspecialchars($client->name ?? '') }}
-                                                        <span class="dot dot-success d-md-none ms-1"></span>
-                                                    </span>
+                                            <a href="detail/{{ $client->id }}">
+                                                <div class="user-card">
+                                                    <div class="user-avatar bg-primary">
+                                                        <span>{{ htmlspecialchars(ucfirst(substr($client->name ?? '', 0, 1))) }}</span>
+                                                    </div>
+                                                    <div class="user-info">
+                                                        <span
+                                                            class="tb-lead">{{ htmlspecialchars($client->name ?? '') }}
+                                                            <span class="dot dot-success d-md-none ms-1"></span>
+                                                        </span>
 
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </a>
                                         </div>
 
 
@@ -226,7 +229,7 @@
 
         {{--  modal start Add New  Client  --}}
 
-        <!-- Modal Content Code -->
+
         <div class="modal fade" tabindex="-1" id="modalDefault">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"> <a href="#" class="close" data-dismiss="modal"
