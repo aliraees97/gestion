@@ -13,10 +13,7 @@ return new class extends Migration
     {
         Schema::create('record_sales', function (Blueprint $table) {
             $table->id();
-            $table->integer('customer_id')->nullable();
-            $table->integer('package_id')->nullable();
             $table->integer('car_id')->nullable();
-            $table->text('services')->nullable();
             $table->integer('payment_id')->nullable();
             $table->string('total')->nullable();
             $table->string('status')->default('open');

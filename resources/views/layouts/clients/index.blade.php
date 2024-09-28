@@ -42,7 +42,7 @@
                                                         <div class="form-icon form-icon-right">
                                                             <em class="icon ni ni-search"></em>
                                                         </div>
-                                                        <input type="search" class="form-control" id="default-04"
+                                                        <input type="search" class="form-control" id="search_client"
                                                             placeholder="Search by name">
                                                     </div>
                                                 </li>
@@ -154,8 +154,6 @@
                                             </div>
                                         </div>
 
-
-
                                     </div>
                                 @endforeach
 
@@ -229,46 +227,60 @@
 
         {{--  modal start Add New  Client  --}}
 
-
-        <div class="modal fade" tabindex="-1" id="modalDefault">
+        <div class="modal fade @if ($errors->any()) show @endif" id="modalDefault" tabindex="-1"
+            role="dialog" aria-labelledby="modalDefaultLabel" aria-hidden="true"
+            @if ($errors->any()) style="display: block;" @endif>
             <div class="modal-dialog" role="document">
-                <div class="modal-content"> <a href="#" class="close" data-dismiss="modal"
-                        aria-label="Close">
-                        <em class="icon ni ni-cross"></em> </a>
+                <div class="modal-content">
+                    <a href="javascript:void(0);" class="close" data-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
                     <div class="modal-header">
                         <h5 class="modal-title">Agregar Nuevo Cliente</h5>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('add-client') }}" method="POST" enctype="multipart/form-data">
+                        <!-- Show general error message if any -->
+                        @if (session('error_message'))
+                            <div class="alert alert-danger">
+                                {{ session('error_message') }}
+                            </div>
+                        @endif
+
+                        <!-- Display all validation errors at once -->
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        <form id="clientForm" action="{{ route('add-client') }}" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label class="form-label" for="default-01">Nombre del Cliente</label>
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="default-01" name="name">
-                                    @if ($errors->has('name'))
-                                        <small class="text-danger">{{ $errors->first('name') }}</small>
-                                    @endif
+                                    <input type="text" class="form-control" id="default-01" name="name"
+                                        value="{{ old('name') }}">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label" for="default-01">Teléfono</label>
+                                <label class="form-label" for="default-02">Teléfono</label>
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="default-01" name="phone">
-                                    @if ($errors->has('phone'))
-                                        <small class="text-danger">{{ $errors->first('phone') }}</small>
-                                    @endif
+                                    <input type="text" class="form-control" id="default-02" name="phone"
+                                        value="{{ old('phone') }}">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label" for="default-01">Correo electrónico
-                                </label>
+                                <label class="form-label" for="default-03">Correo electrónico</label>
                                 <div class="form-control-wrap">
-                                    <input type="email" class="form-control" id="default-01" name="email">
-                                    @if ($errors->has('email'))
-                                        <small class="text-danger">{{ $errors->first('email') }}</small>
-                                    @endif
+                                    <input type="email" class="form-control" id="default-03" name="email"
+                                        value="{{ old('email') }}">
                                 </div>
                             </div>
 
@@ -276,12 +288,11 @@
                                 <button type="submit" class="btn btn-primary">Guardar Cliente</button>
                             </div>
                         </form>
-
                     </div>
-
                 </div>
             </div>
         </div>
+
 
         {{-- modal End Add New  Client --}}
 

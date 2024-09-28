@@ -41,6 +41,26 @@
 
                         <!-- .nk-menu-item -->
                         <li class="nk-menu-item">
+                            <a href="{{ route('car') }}" class="nk-menu-link">
+                                <span class="nk-menu-icon">
+                                    <em class="ti ti-car"></em>
+                                </span>
+                                <span class="nk-menu-text">Carros</span>
+                            </a>
+                        </li>
+
+                        <!-- .nk-menu-item -->
+                        <li class="nk-menu-item">
+                            <a href="{{ route('delivered-car') }}" class="nk-menu-link">
+                                <span class="nk-menu-icon">
+                                    <em class="icon ni ni-check-circle-fill"></em>
+                                </span>
+                                <span class="nk-menu-text">Autos Entregados</span>
+                            </a>
+                        </li>
+
+                        <!-- .nk-menu-item -->
+                        {{-- <li class="nk-menu-item">
                             <a href="{{ route('gestion') }}" class="nk-menu-link">
                                 <span class="nk-menu-icon">
 
@@ -48,7 +68,7 @@
                                 </span>
                                 <span class="nk-menu-text">Ventas Récord</span>
                             </a>
-                        </li>
+                        </li> --}}
 
                         <!-- .nk-menu-item -->
                         <li class="nk-menu-item">
@@ -58,15 +78,7 @@
                             </a>
                         </li>
 
-                        <!-- .nk-menu-item -->
-                        <li class="nk-menu-item">
-                            <a href="{{ route('car') }}" class="nk-menu-link">
-                                <span class="nk-menu-icon">
-                                    <em class="ti ti-car"></em>
-                                </span>
-                                <span class="nk-menu-text">Carros</span>
-                            </a>
-                        </li>
+
 
                         <!-- .nk-menu-item -->
                         <li class="nk-menu-item">

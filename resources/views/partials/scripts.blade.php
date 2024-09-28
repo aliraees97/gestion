@@ -147,6 +147,77 @@
     <script>
         $(document).ready(function() {
 
+
+            // search script for clients start
+
+            $('#search_client').on('input', function() {
+                const query = $(this).val().toLowerCase();
+                let hasResults = false;
+
+                $('.nk-tb-item').each(function() {
+                    // Get the client's name, phone, and email from the respective elements
+                    const clientName = $(this).find('.user-info .tb-lead').text().toLowerCase();
+                    const clientPhone = $(this).find('.tb-col-md').eq(0).text()
+                        .toLowerCase();
+                    const clientEmail = $(this).find('.tb-col-md').eq(1).text()
+                        .toLowerCase();
+
+                    // Show or hide the client item based on the search query
+                    if (clientName.includes(query) || clientPhone.includes(query) || clientEmail
+                        .includes(
+                            query)) {
+                        $(this).show();
+                        hasResults = true;
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+                // If no results found, show a 'No data found' message
+                if (!hasResults) {
+                    $('#no-results-message').show();
+                } else {
+                    $('#no-results-message').hide();
+                }
+            });
+            // search script for clients end
+
+            // Add client page Ajax Start
+            $('#clientForm').on('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        // Redirect to the same page to show success message
+                        window.location.reload();
+                    },
+                    error: function(xhr) {
+                        // Clear previous errors
+                        $('.alert-danger').remove();
+
+                        // Show errors in the modal
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, value) {
+                                $('#modalDefault .modal-body').prepend(
+                                    '<div class="alert alert-danger">' + value[0] +
+                                    '</div>');
+                            });
+                        } else {
+                            // Show general error message if any other error occurs
+                            $('#modalDefault .modal-body').prepend(
+                                '<div class="alert alert-danger">An error occurred. Please try again.</div>'
+                            );
+                        }
+                    }
+                });
+            });
+            // Add client page AjaxEnd
+
+
             // Update Client Script S
 
             $('#editClientModal').on('show.bs.modal', function(event) {
@@ -348,7 +419,6 @@
 
             // Record Sale Update Script S
 
-
             $('.editrecord').on('click', function() {
                 event.preventDefault();
                 var recordId = $(this).data('record-id');
@@ -404,6 +474,163 @@
 
 
 
+            // Add Car Scripts Start
+
+            $('#carForm').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+                // Clear previous error messages
+                $('#errorMessages').addClass('d-none');
+                $('#errorList').empty();
+
+                $.ajax({
+                    url: "{{ route('add-car') }}",
+                    type: "POST",
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        // Handle success
+                        if (response.success) {
+                            // Redirect to a specific page if necessary
+                            window.location.reload();
+                        }
+                    },
+                    error: function(xhr) {
+                        // Handle validation errors
+                        if (xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+                            $('#errorMessages').removeClass('d-none');
+                            $.each(errors, function(key, value) {
+                                $('#errorList').append('<li>' + value[0] +
+                                    '</li>'
+                                );
+                            });
+                        } else {
+                            // Handle other errors
+                            alert('An error occurred. Please try again later.');
+                        }
+                    }
+                });
+            });
+            // Add Car Scripts End
+
+
+            // Car status completed Scripts Start
+            $('#modalCompleted').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var carId = button.data('id');
+                var modal = $(this);
+
+                // Store car ID in the modal for later use
+                modal.find('.complete-btn').data('id', carId);
+            });
+
+            // Handle the complete button click
+            $('.complete-btn').on('click', function() {
+                var carId = $(this).data('id');
+
+                $.ajax({
+                    url: "{{ route('cars-complete', ':id') }}".replace(':id', carId),
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+
+                        if (response.success) {
+                            window.location.reload();
+                        }
+                    },
+                    error: function(xhr) {
+                        // Handle error
+                        alert('Failed to update car status. Please try again.');
+                    }
+                });
+            });
+
+            // Car status completed Scripts End
+
+
+
+            // Payment On Car Page completed Scripts Start
+
+            $('#modalPayment').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var carId = button.data('id');
+
+                var modal = $(this);
+
+                modal.find('.payment-complete').data('id', carId);
+            });
+
+            // Handle the complete button click inside the modal
+            $('.payment-complete').on('click', function() {
+                var carId = $(this).data('id');
+                var paymentId = $('#payment_id').val();
+
+                $.ajax({
+                    url: "{{ route('payment-complete', ':id') }}".replace(':id', carId),
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        payment_id: paymentId
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            window.location.reload();
+                        }
+                    },
+                    error: function(xhr) {
+                        alert('Failed to update car status. Please try again.');
+                    }
+                });
+            });
+
+
+            // Payment On Car Page completed Scripts End
+
+
+
+            // Mark As Deliver Car Page completed Scripts Start
+
+            $('#modalWhatsApp').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var carId = button.data('id');
+
+                var modal = $(this);
+
+                modal.find('.mark-as-deliver').data('id', carId);
+            });
+
+            // Handle the complete button click inside the modal
+            $('.mark-as-deliver').on('click', function() {
+                var carId = $(this).data('id');
+
+                var paymentId = $('#payment_id').val();
+
+                $.ajax({
+                    url: "{{ route('mark-as-deliver', ':id') }}".replace(':id', carId),
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            window.location.reload();
+                        }
+                    },
+                    error: function(xhr) {
+                        alert('Failed to update car status. Please try again.');
+                    }
+                });
+            });
+
+
+            // Mark As Deliver Car Page completed Scripts End
+
+
+
+
 
             // Update Car Script S
 
@@ -450,25 +677,46 @@
 
 
 
-            // Close today's sale via AJAX
+            // Close today's sale via AJAX Start
 
 
             $('#confirmCloseSale').on('click', function(event) {
                 event.preventDefault();
 
                 $.ajax({
-                    url: '{{ route('close.daily.sale') }}',
+                    url: '{{ route('close.daily.sale') }}', // Make sure this route closes the sales
                     type: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
-                        // Load closed sales data (assuming this function exists)
-                        loadClosedSales();
+
+                        location.reload();
+                        // Clear the existing sales list
+                        $('#closedSalesList').empty();
+
+                        // Show total sales in the display area for today's closed sales
+                        let totalSales = response.today_sales.reduce((sum, sale) => sum + sale
+                            .total, 0);
+                        $('#totalSalesDisplay').text('Total Sales Today: $' + totalSales
+                            .toFixed(2));
+
+                        // Populate the sales list with today's closed sales
+                        response.today_sales.forEach(function(sale) {
+                            $('#closedSalesList').append(
+                                '<tr>' +
+                                '<td>$' + sale.total.toFixed(2) + '</td>' +
+                                '<td>' + moment(sale.created_at).format(
+                                    'YYYY-MM-DD') + '</td>' +
+                                '</tr>'
+                            );
+                        });
+
+                        // Optionally, load and show all closed sales records (you can keep this line to show all closed sales)
+                        // loadClosedSales();
 
                         $('#modalSaleClose').modal('hide').removeClass('show').css('display',
                             'none');
-                        location.reload();
 
                         // Show success message
                         $('#successMessage').text('Sale closed successfully!').fadeIn().delay(
@@ -480,50 +728,70 @@
                 });
             });
 
-            // Function to load and display the sum of closed sales
-
-            function loadClosedSales(page = 1) {
+            // Function to load and display all closed sales
+            function loadClosedSales() {
                 $.ajax({
-                    url: '{{ route('get-closed-sales') }}?page=' + page,
+                    url: '{{ route('get-closed-sales') }}', // Ensure this route is defined in your routes file
                     type: 'GET',
                     success: function(response) {
-                        $('#closedSalesList').empty(); // Clear existing content
+                        // Clear the existing content
+                        $('#closedSalesList').empty();
 
-                        // Loop through the response data and append to the table
+                        // Append the closed sales to the list
                         response.data.forEach(function(sale) {
                             $('#closedSalesList').append(
                                 '<tr>' +
                                 '<td>$' + sale.total_sales.toFixed(2) + '</td>' +
-                                // Display total sales for the day
-                                '<td>' + moment(sale.date).format('YYYY-MM-DD') +
-                                '</td>' +
+                                '<td>' + moment(sale.date).format('YYYY-MM-DD') + '</td>' +
                                 '</tr>'
                             );
                         });
-
-                        // Handle pagination links
-                        $('#paginationLinks').empty(); // Clear existing links
-                        for (let i = 1; i <= response.last_page; i++) {
-                            $('#paginationLinks').append(
-                                '<button class="btn btn-link pagination-button" data-page="' + i +
-                                '">' + i + '</button>'
-                            );
-                        }
                     },
                     error: function(xhr) {
-                        alert('Error fetching closed sales data. Please try again.');
+                        alert('Error fetching closed sales. Please try again.');
                     }
                 });
             }
 
-            // Event delegation for pagination buttons
-            $(document).on('click', '.pagination-button', function() {
-                const page = $(this).data('page');
-                loadClosedSales(page);
+            // Optionally, call this function to load the closed sales when the page loads
+            $(document).ready(function() {
+                loadClosedSales();
             });
 
-            // Initially load closed sales data on page load
-            loadClosedSales();
+
+            // Close today's sale via AJAX End
+
+
+            // Close Single sale via AJAX
+
+            $(document).on('click', '.confirmSingleSale', function(event) {
+                event.preventDefault();
+
+                var recordId = $(this).data('record-id');
+
+                $.ajax({
+                    url: '{{ route('close.single.sale') }}',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        record_id: recordId
+                    },
+                    success: function(response) {
+
+                        location.reload();
+                        // Show success message
+                        $('#successMessage').text('Sale closed successfully!').fadeIn().delay(
+                            3000).fadeOut();
+                    },
+                    error: function(xhr) {
+                        alert('Error closing the sale. Please try again.');
+                    }
+                });
+            });
+
+            // Close Single sale via AJAX End
+
+
 
 
 
@@ -592,7 +860,7 @@
 
 
 
-            // for add Client on modal  with ajax end
+            // for add Client on Car modal  with ajax Start
 
             $('#modalClient form').on('submit', function(e) {
                 e.preventDefault();
@@ -655,7 +923,7 @@
                 });
             });
 
-            // for add Client on modal  with ajax end
+            // for add Client on Car modal with ajax end
 
 
 
@@ -686,6 +954,7 @@
                     }
                 }
             });
+
             // Rocrds filter
 
 

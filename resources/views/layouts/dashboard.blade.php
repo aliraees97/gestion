@@ -66,7 +66,6 @@
                                                     @endif
                                                 </li>
 
-
                                             </ul>
                                         </div>
                                     </div>
@@ -254,6 +253,9 @@
                                                     </h6>
                                                 </div>
                                             </div>
+                                            <!-- Closed Sales Table -->
+                                            <div id="totalSalesDisplay"></div>
+
                                             <table id="closedSalesTable" class="table">
                                                 <thead>
                                                     <tr>
@@ -269,6 +271,8 @@
                                             <div id="paginationLinks" class="pagination">
                                                 <!-- Pagination links will be populated here -->
                                             </div>
+
+
 
 
 

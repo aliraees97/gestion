@@ -80,17 +80,29 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
     // Record Sale Close  Routes
     Route::post('/close-todays-sale', [ManagementController::class, 'closeTodaySale'])->name('close.daily.sale');
-    Route::get('/get-closed-sales', [ManagementController::class, 'getClosedSales'])->name('get-closed-sales');
+    Route::post('/close-single-sale', [ManagementController::class, 'closeSingleSale'])->name('close.single.sale');
+
+
     Route::get('/filter-records', [ManagementController::class, 'filterRecords'])->name('filter.records');
 
+
+    // new
+    Route::get('/get-closed-sales', [ManagementController::class, 'getClosedSales'])->name('get-closed-sales');
+    Route::get('/get-todays-sales-total', [ManagementController::class, 'getTodaysSalesTotal'])->name('get-todays-sales-total');
 
 
 
 
     // Cars  Routes
     Route::get('/car', [CarController::class, 'index'])->name('car');
+    Route::get('/delivered-car', [CarController::class, 'deliverCars'])->name('delivered-car');
     Route::Post('/add-car', [CarController::class, 'carStore'])->name('add-car');
     Route::Post('/add-car-ajax', [CarController::class, 'carStoreAjax'])->name('add-car-ajax');
     Route::post('/car/update', [CarController::class, 'carUpdate']);
     Route::get('/delete-car/{id}', [CarController::class, 'carDelete']);
+
+    //   Car Status Routes
+    Route::post('/cars/{id}', [CarController::class, 'completeStatus'])->name('cars-complete');
+    Route::post('/payment/{id}', [CarController::class, 'completePayment'])->name('payment-complete');
+    Route::post('/mark-as-deliver/{id}', [CarController::class, 'deliverStatus'])->name('mark-as-deliver');
 });

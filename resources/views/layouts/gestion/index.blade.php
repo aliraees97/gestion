@@ -187,11 +187,10 @@
                                                     <ul class="link-list-opt no-bdr">
 
                                                         <li>
-                                                            <a href="#" id="confirmCloseSale" class=""
+                                                            <a href="#" class="confirmSingleSale"
                                                                 data-record-id="{{ $record->id }}">
-                                                                <em class="icon ni ni-eye"></em>
-                                                                <span>Venta Cerrada
-                                                                </span>
+                                                                <em class="icon ni ni-reports"></em>
+                                                                <span>Venta Cerrada</span>
                                                             </a>
 
                                                         </li>

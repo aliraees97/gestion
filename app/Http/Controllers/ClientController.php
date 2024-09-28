@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Car;
 use App\Models\Customer;
 use App\Models\RecordSale;
 use Illuminate\Http\Request;
@@ -21,14 +22,17 @@ class ClientController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
-            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:15',
+            'phone' => 'required',
             'email' => 'required|email|unique:customers,email',
         ]);
 
         if ($validator->fails()) {
-            Session::flash('error_message', 'Please ensure all fields are filled out correctly and try again.');
-            return back()->withErrors($validator)->withInput();
+            // If validation fails, flash the error messages
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
         }
+
         try {
             $customer = new Customer();
             $customer->name = $request->name;
@@ -36,12 +40,14 @@ class ClientController extends Controller
             $customer->phone = $request->phone;
             $customer->save();
 
+            // Flash the success message
             Session::flash('success_message', 'Great! Client has been saved successfully!');
-            return redirect()->back();
+            return response()->json(['success' => true]);
         } catch (\Exception $e) {
-            return $e->getMessage();
+            return response()->json(['error' => 'An error occurred while saving the client.'], 500);
         }
     }
+
 
 
     public function clientStoreAjax(Request $request)
@@ -66,7 +72,6 @@ class ClientController extends Controller
             $customer->phone = $request->phone;
             $customer->save();
 
-            // Return the new customer data
             return response()->json([
                 'success' => true,
                 'customer' => $customer,
@@ -84,7 +89,7 @@ class ClientController extends Controller
     public function customerDetail($id)
     {
         $user = Customer::find($id);
-        $records = RecordSale::where('customer_id', $id)->with('car', 'package')->get();
+        $records = Car::where('customer_id', $id)->with('customer', 'package')->get();
         // dd($records);
 
         if (!$user) {

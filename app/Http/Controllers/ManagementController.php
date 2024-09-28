@@ -15,7 +15,7 @@ class ManagementController extends Controller
 {
     public function index()
     {
-        $records = RecordSale::with(['customer', 'car', 'package', 'payment'])->latest()->get();
+        $records = RecordSale::with(['car', 'payment'])->latest()->get();
         $customer = Customer::get();
         $cars = Car::get();
         $package = Package::get();
@@ -123,9 +123,37 @@ class ManagementController extends Controller
         return response()->json(['message' => 'Sales closed successfully.']);
     }
 
-    public function getClosedSales()
+    public function closeSingleSale(Request $request)
     {
-        // Group by date, calculate total sum for each date, and paginate the result
+
+        $request->validate([
+            'record_id' => 'required|exists:record_sales,id',
+        ]);
+
+
+        RecordSale::where('id', $request->record_id)
+            ->where('status', 'open')
+            ->update(['status' => 'closed']);
+
+        return response()->json(['message' => 'Sale closed successfully.']);
+    }
+
+    // public function getClosedSales()
+    // {
+    //     // Group by date, calculate total sum for each date, and paginate the result
+    //     $closedSales = RecordSale::selectRaw('DATE(created_at) as date, SUM(total) as total_sales')
+    //         ->where('status', 'closed')
+    //         ->groupBy('date')
+    //         ->orderBy('date', 'desc')
+    //         ->paginate(10);
+
+    //     return response()->json($closedSales);
+    // }
+
+
+
+    public function getClosedSales(Request $request)
+    {
         $closedSales = RecordSale::selectRaw('DATE(created_at) as date, SUM(total) as total_sales')
             ->where('status', 'closed')
             ->groupBy('date')
@@ -134,6 +162,27 @@ class ManagementController extends Controller
 
         return response()->json($closedSales);
     }
+
+    public function getTodaysSalesTotal()
+    {
+        // Close all sales with 'open' status regardless of the date
+        $closedCount = RecordSale::where('status', 'open')->update(['status' => 'closed']);
+
+        // Get today's closed sales and their total
+        $todaySales = RecordSale::whereDate('created_at', today())
+            ->where('status', 'closed')
+            ->get();
+
+        // Calculate the total sales for today
+        $totalSales = $todaySales->sum('total');
+
+        return response()->json([
+            'total_sales' => $totalSales,
+            'closed_count' => $closedCount,
+            'today_sales' => $todaySales
+        ]);
+    }
+
 
 
     public function filterRecords(Request $request)

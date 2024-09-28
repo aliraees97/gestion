@@ -78,16 +78,16 @@
                                                     @foreach ($records as $rec)
                                                         <div class="nk-tb-item">
                                                             <div class="nk-tb-col tb-col-md">
-                                                                <span>{{ $rec->car->name ?? '' }}</span>
+                                                                <span>{{ $rec->name ?? '' }}</span>
                                                             </div>
                                                             <div class="nk-tb-col tb-col-md">
-                                                                <span>{{ $rec->car->model ?? '' }}</span>
+                                                                <span>{{ $rec->model ?? '' }}</span>
                                                             </div>
                                                             <div class="nk-tb-col tb-col-md">
-                                                                <span>{{ $rec->car->color ?? '' }}</span>
+                                                                <span>{{ $rec->color ?? '' }}</span>
                                                             </div>
                                                             <div class="nk-tb-col tb-col-md">
-                                                                <span>{{ $rec->car->license_plate ?? '' }}</span>
+                                                                <span>{{ $rec->license_plate ?? '' }}</span>
                                                             </div>
                                                             <div class="nk-tb-col tb-col-md">
                                                                 <span>{{ $rec->package->name ?? '' }}</span>
@@ -98,22 +98,41 @@
                                                                         class="badge bg-primary me-1">{{ htmlspecialchars($service) }}</span>
                                                                 @endforeach
                                                             </div>
-                                                            {{-- <div class="nk-tb-col tb-col-md">
-                                                                <span class="timer"
-                                                                    data-created-at="{{ $rec->created_at }}"></span>
-                                                            </div> --}}
+
 
                                                             <div class="nk-tb-col tb-col-md">
-
-                                                                @if ($rec->car->status != 'completed')
-                                                                    <p>
-                                                                        <span class="timer"
-                                                                            data-created-at="<?php echo $rec->created_at; ?>"></span>
-                                                                    </p>
+                                                                @if ($rec->status != 'delivered')
+                                                                    <span class="timer"
+                                                                        data-created-at="<?php echo $rec->created_at; ?>">
+                                                                    </span>
                                                                 @else
-                                                                    <span class="tb-status text-success">Done</span>
-                                                                @endif
+                                                                    @php
+                                                                        // Calculate the time difference
+                                                                        $createdAt = \Carbon\Carbon::parse(
+                                                                            $rec->created_at,
+                                                                        );
+                                                                        $completedAt = \Carbon\Carbon::parse(
+                                                                            $rec->completed_at,
+                                                                        );
+                                                                        $differenceInSeconds = $createdAt->diffInSeconds(
+                                                                            $completedAt,
+                                                                        ); // Get difference in seconds
 
+                                                                        // Convert seconds to minutes and seconds
+                                                                        $minutes = floor($differenceInSeconds / 60);
+                                                                        $seconds = $differenceInSeconds % 60;
+                                                                    @endphp
+                                                                    <span>
+                                                                        @if ($minutes > 0)
+                                                                            {{ $minutes }}
+                                                                            min{{ $minutes > 1 ? 's' : '' }}
+                                                                        @endif
+                                                                        @if ($seconds > 0)
+                                                                            {{ $seconds }}
+                                                                            sec{{ $seconds > 1 ? 's' : '' }}
+                                                                        @endif
+                                                                    </span>
+                                                                @endif
                                                             </div>
 
 

@@ -9,23 +9,22 @@ class RecordSale extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'customer_id',
-        'package_id',
-        'services',
+        'car_id',
         'payment_id',
         'total',
+        'status',
     ];
 
 
-    public function customer()
-    {
-        return $this->belongsTo(Customer::class);
-    }
+    // public function customer()
+    // {
+    //     return $this->belongsTo(Customer::class);
+    // }
 
-    public function package()
-    {
-        return $this->belongsTo(Package::class);
-    }
+    // public function package()
+    // {
+    //     return $this->belongsTo(Package::class);
+    // }
 
     public function payment()
     {
