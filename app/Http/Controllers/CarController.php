@@ -18,16 +18,39 @@ use Illuminate\Support\Facades\Validator;
 class CarController extends Controller
 {
 
+    // public function index()
+    // {
+    //     $package = Package::get();
+    //     $payments = Payment::get();
+    //     $services = Service::get();
+    //     $customer = Customer::get();
+    //     $cars = Car::with(['customer', 'package', 'payment'])->orderBy('created_at', 'asc')->paginate(5);
+    //     // dd($cars);
+    //     return view('layouts.car.index', compact('cars', 'customer', 'package', 'services', 'payments'));
+    // }
+
     public function index()
     {
         $package = Package::get();
         $payments = Payment::get();
         $services = Service::get();
         $customer = Customer::get();
-        $cars = Car::with(['customer', 'package', 'payment'])->orderBy('created_at', 'asc')->paginate(5);
-        // dd($cars);
-        return view('layouts.car.index', compact('cars', 'customer', 'package', 'services', 'payments'));
+
+        // Paginate cars with 'incomplete' status
+        $carsInProcess = Car::with(['customer', 'package', 'payment'])
+            ->where('status', 'incomplete')
+            ->orderBy('created_at', 'asc')
+            ->paginate(5, ['*'], 'incompletePage');
+
+        // Paginate cars with 'completed' status
+        $carsReady = Car::with(['customer', 'package', 'payment'])
+            ->where('status', 'completed')
+            ->orderBy('created_at', 'asc')
+            ->paginate(5, ['*'], 'completedPage');
+
+        return view('layouts.car.index', compact('carsInProcess', 'carsReady', 'customer', 'package', 'services', 'payments'));
     }
+
 
     public function deliverCars()
     {

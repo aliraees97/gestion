@@ -13,7 +13,7 @@ class ClientController extends Controller
 {
     public function index()
     {
-        $clients = Customer::latest()->paginate();
+        $clients = Customer::latest()->paginate(10);
         return view('layouts.clients.index', compact('clients'));
     }
 

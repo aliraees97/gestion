@@ -37,14 +37,14 @@
                                         <div class="toggle-expand-content" data-content="more-options">
                                             <ul class="nk-block-tools g-3">
                                                 <li>
-                                                    <div id="clients_filter"
+                                                    {{-- <div id="clients_filter"
                                                         class="form-control-wrap dataTables_filter">
                                                         <div class="form-icon form-icon-right">
                                                             <em class="icon ni ni-search"></em>
                                                         </div>
                                                         <input type="search" class="form-control" id="default-04"
                                                             placeholder="Search by name">
-                                                    </div>
+                                                    </div> --}}
                                                 </li>
 
 
@@ -72,7 +72,6 @@
 
 
                             <h4 class="py-3">Autos en Proceso</h4>
-
                             <div class="nk-tb-list is-separate mb-3 no-car">
                                 <div class="nk-tb-item nk-tb-head">
 
@@ -91,106 +90,139 @@
                                     <div class="nk-tb-col tb-col-md"><span class="sub-text">Acción</span></div>
 
                                 </div>
+                                @foreach ($carsInProcess as $car)
+                                    <div class="nk-tb-item">
 
-                                @foreach ($cars as $car)
-                                    @if ($car->status == 'incomplete')
-                                        <div class="nk-tb-item">
-
-                                            <div class="nk-tb-col">
-                                                <a href="detail/{{ $car->customer->id }}">
-                                                    <div class="user-card">
-                                                        <div class="user-avatar bg-primary">
-                                                            <span>{{ htmlspecialchars(ucfirst(substr($car->customer->name ?? '', 0, 1))) }}</span>
-                                                        </div>
-                                                        <div class="user-info">
-                                                            <span
-                                                                class="tb-lead">{{ htmlspecialchars($car->customer->name ?? '') }}
-                                                                <span
-                                                                    class="dot dot-success d-md-none ms-1"></span></span>
-                                                            <span>{{ htmlspecialchars($car->customer->email ?? '') }}</span>
-                                                        </div>
+                                        <div class="nk-tb-col">
+                                            <a href="detail/{{ $car->customer->id }}">
+                                                <div class="user-card">
+                                                    <div class="user-avatar bg-primary">
+                                                        <span>{{ htmlspecialchars(ucfirst(substr($car->customer->name ?? '', 0, 1))) }}</span>
                                                     </div>
-                                                </a>
-                                            </div>
+                                                    <div class="user-info">
+                                                        <span
+                                                            class="tb-lead">{{ htmlspecialchars($car->customer->name ?? '') }}
+                                                            <span class="dot dot-success d-md-none ms-1"></span></span>
+                                                        <span>{{ htmlspecialchars($car->customer->email ?? '') }}</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                <span>{{ htmlspecialchars($car->name ?? '') }}</span>
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            <span>{{ htmlspecialchars($car->name ?? '') }}</span>
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                <span>{{ htmlspecialchars($car->model ?? '') }}</span>
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            <span>{{ htmlspecialchars($car->model ?? '') }}</span>
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                <span>{{ htmlspecialchars($car->license_plate ?? '') }}</span>
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            <span>{{ htmlspecialchars($car->license_plate ?? '') }}</span>
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                <span>{{ htmlspecialchars($car->color ?? '') }}</span>
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            <span>{{ htmlspecialchars($car->color ?? '') }}</span>
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                <span>{{ htmlspecialchars($car->package->name ?? '') }}</span>
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            <span>{{ htmlspecialchars($car->package->name ?? '') }}</span>
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                @foreach (json_decode($car->services ?? '[]') as $service)
-                                                    <span
-                                                        class="badge bg-primary me-1">{{ htmlspecialchars($service) }}</span>
-                                                @endforeach
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            @foreach (json_decode($car->services ?? '[]') as $service)
+                                                <span
+                                                    class="badge bg-primary me-1">{{ htmlspecialchars($service) }}</span>
+                                            @endforeach
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                {{-- <span>{{ htmlspecialchars($car->status ?? '') }}</span> --}}
-                                                @if ($car->pay_status != 'paid')
-                                                    <span class="tb-status text-danger">No</span>
-                                                @else
-                                                    <span class="tb-status text-success">Yes</span>
-                                                @endif
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            {{-- <span>{{ htmlspecialchars($car->status ?? '') }}</span> --}}
+                                            @if ($car->pay_status != 'paid')
+                                                <span class="tb-status text-danger">No</span>
+                                            @else
+                                                <span class="tb-status text-success">Yes</span>
+                                            @endif
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                {{-- <span>{{ htmlspecialchars($car->status ?? '') }}</span> --}}
-                                                @if ($car->status == 'incomplete')
-                                                    <span class="tb-status text-danger">Autos en Proceso</span>
-                                                @endif
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            {{-- <span>{{ htmlspecialchars($car->status ?? '') }}</span> --}}
+                                            @if ($car->status == 'incomplete')
+                                                <span class="tb-status text-danger">Autos en Proceso</span>
+                                            @endif
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                <span class="timer" data-created-at="<?php echo $car->created_at; ?>">
-                                                </span>
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            <span class="timer" data-created-at="<?php echo $car->created_at; ?>">
+                                            </span>
+                                        </div>
 
 
-                                            <div class="nk-tb-col tb-col-md">
+                                        <div class="nk-tb-col tb-col-md">
 
+                                            <button data-id="{{ $car->id }}" data-toggle="modal"
+                                                data-target="#modalCompleted"
+                                                class="btn btn-primary btn-round btn-icon ">
+                                                <em class="icon ni ni-check"></em>
+                                            </button>
+
+                                            @if ($car->pay_status != 'paid')
                                                 <button data-id="{{ $car->id }}" data-toggle="modal"
-                                                    data-target="#modalCompleted"
-                                                    class="btn btn-primary btn-round btn-icon ">
-                                                    <em class="icon ni ni-check"></em>
+                                                    data-target="#modalPayment"
+                                                    class="btn btn-primary btn-round btn-icon">
+                                                    <em class="icon ni ni-money"></em>
                                                 </button>
-
-                                                @if ($car->pay_status != 'paid')
-                                                    <button data-id="{{ $car->id }}" data-toggle="modal"
-                                                        data-target="#modalPayment"
-                                                        class="btn btn-primary btn-round btn-icon">
-                                                        <em class="icon ni ni-money"></em>
-                                                    </button>
-                                                @endif
+                                            @endif
 
 
 
-                                                {{-- <a href="/delete-car/{{ $car->id }}" class="btn btn-danger ">
+                                            {{-- <a href="/delete-car/{{ $car->id }}" class="btn btn-danger ">
                                                     <em class="icon ni ni-trash-alt"></em>
                                                 </a> --}}
-                                            </div>
-
                                         </div>
-                                    @endif
+
+                                    </div>
                                 @endforeach
 
 
                             </div>
+
+                            <!-- pagination .card for Autos en Proceso -->
+                            <div class="card">
+                                <div class="card-inner">
+                                    <div class="nk-block-between-md g-3">
+                                        <div class="g">
+                                            <ul class="pagination justify-content-center justify-content-md-start">
+                                                @if ($carsInProcess->onFirstPage())
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link" href="#" tabindex="-1"
+                                                            aria-disabled="true">Prev</a>
+                                                    </li>
+                                                @else
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                            href="{{ $carsInProcess->previousPageUrl() }}">Prev</a>
+                                                    </li>
+                                                @endif
+
+                                                @if ($carsInProcess->hasMorePages())
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                            href="{{ $carsInProcess->nextPageUrl() }}">Next</a>
+                                                    </li>
+                                                @else
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link" href="#" tabindex="-1"
+                                                            aria-disabled="true">Next</a>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End pagination .card -->
+
 
 
                             <h4 class="py-3">Autos Listos</h4>
@@ -211,125 +243,159 @@
 
                                 </div>
 
-                                @foreach ($cars as $car)
-                                    @if ($car->status == 'completed')
-                                        <div class="nk-tb-item">
+                                @foreach ($carsReady as $car)
+                                    <div class="nk-tb-item">
 
-                                            <div class="nk-tb-col">
-                                                <a href="detail/{{ $car->customer->id }}">
-                                                    <div class="user-card">
-                                                        <div class="user-avatar bg-primary">
-                                                            <span>{{ htmlspecialchars(ucfirst(substr($car->customer->name ?? '', 0, 1))) }}</span>
-                                                        </div>
-                                                        <div class="user-info">
-                                                            <span
-                                                                class="tb-lead">{{ htmlspecialchars($car->customer->name ?? '') }}
-                                                                <span
-                                                                    class="dot dot-success d-md-none ms-1"></span></span>
-                                                            <span>{{ htmlspecialchars($car->customer->email ?? '') }}</span>
-                                                        </div>
+                                        <div class="nk-tb-col">
+                                            <a href="detail/{{ $car->customer->id }}">
+                                                <div class="user-card">
+                                                    <div class="user-avatar bg-primary">
+                                                        <span>{{ htmlspecialchars(ucfirst(substr($car->customer->name ?? '', 0, 1))) }}</span>
                                                     </div>
-                                                </a>
-                                            </div>
+                                                    <div class="user-info">
+                                                        <span
+                                                            class="tb-lead">{{ htmlspecialchars($car->customer->name ?? '') }}
+                                                            <span class="dot dot-success d-md-none ms-1"></span></span>
+                                                        <span>{{ htmlspecialchars($car->customer->email ?? '') }}</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                <span>{{ htmlspecialchars($car->name ?? '') }}</span>
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            <span>{{ htmlspecialchars($car->name ?? '') }}</span>
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                <span>{{ htmlspecialchars($car->model ?? '') }}</span>
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            <span>{{ htmlspecialchars($car->model ?? '') }}</span>
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                <span>{{ htmlspecialchars($car->license_plate ?? '') }}</span>
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            <span>{{ htmlspecialchars($car->license_plate ?? '') }}</span>
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                <span>{{ htmlspecialchars($car->color ?? '') }}</span>
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            <span>{{ htmlspecialchars($car->color ?? '') }}</span>
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                <span>{{ htmlspecialchars($car->package->name ?? '') }}</span>
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            <span>{{ htmlspecialchars($car->package->name ?? '') }}</span>
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                @foreach (json_decode($car->services ?? '[]') as $service)
-                                                    <span
-                                                        class="badge bg-primary me-1">{{ htmlspecialchars($service) }}</span>
-                                                @endforeach
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            @foreach (json_decode($car->services ?? '[]') as $service)
+                                                <span
+                                                    class="badge bg-primary me-1">{{ htmlspecialchars($service) }}</span>
+                                            @endforeach
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                {{-- <span>{{ htmlspecialchars($car->status ?? '') }}</span> --}}
-                                                @if ($car->pay_status != 'paid')
-                                                    <span class="tb-status text-danger">No</span>
-                                                @else
-                                                    <span class="tb-status text-success">Yes</span>
-                                                @endif
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            {{-- <span>{{ htmlspecialchars($car->status ?? '') }}</span> --}}
+                                            @if ($car->pay_status != 'paid')
+                                                <span class="tb-status text-danger">No</span>
+                                            @else
+                                                <span class="tb-status text-success">Yes</span>
+                                            @endif
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                {{-- <span>{{ htmlspecialchars($car->status ?? '') }}</span> --}}
-                                                @if ($car->status == 'completed')
-                                                    <span class="tb-status text-success">Autos Listos</span>
-                                                @endif
-                                            </div>
+                                        <div class="nk-tb-col tb-col-md">
+                                            {{-- <span>{{ htmlspecialchars($car->status ?? '') }}</span> --}}
+                                            @if ($car->status == 'completed')
+                                                <span class="tb-status text-success">Autos Listos</span>
+                                            @endif
+                                        </div>
 
-                                            <div class="nk-tb-col tb-col-md">
-                                                @if ($car->status != 'completed')
-                                                    <span class="timer" data-created-at="<?php echo $car->created_at; ?>">
-                                                    </span>
-                                                @else
-                                                    @php
-                                                        // Calculate the time difference
-                                                        $createdAt = \Carbon\Carbon::parse($car->created_at);
-                                                        $completedAt = \Carbon\Carbon::parse($car->completed_at);
-                                                        $differenceInSeconds = $createdAt->diffInSeconds($completedAt); // Get difference in seconds
+                                        <div class="nk-tb-col tb-col-md">
+                                            @if ($car->status != 'completed')
+                                                <span class="timer" data-created-at="<?php echo $car->created_at; ?>">
+                                                </span>
+                                            @else
+                                                @php
+                                                    // Calculate the time difference
+                                                    $createdAt = \Carbon\Carbon::parse($car->created_at);
+                                                    $completedAt = \Carbon\Carbon::parse($car->completed_at);
+                                                    $differenceInSeconds = $createdAt->diffInSeconds($completedAt); // Get difference in seconds
 
-                                                        // Convert seconds to minutes and seconds
-                                                        $minutes = floor($differenceInSeconds / 60);
-                                                        $seconds = $differenceInSeconds % 60;
-                                                    @endphp
-                                                    <span>
-                                                        @if ($minutes > 0)
-                                                            {{ $minutes }} min{{ $minutes > 1 ? 's' : '' }}
-                                                        @endif
-                                                        @if ($seconds > 0)
-                                                            {{ $seconds }} sec{{ $seconds > 1 ? 's' : '' }}
-                                                        @endif
-                                                    </span>
-                                                @endif
-                                            </div>
-
-
-                                            <div class="nk-tb-col tb-col-md">
-
-                                                @if ($car->pay_status != 'paid')
-                                                    <button data-id="{{ $car->id }}" data-toggle="modal"
-                                                        data-target="#modalPayment"
-                                                        class="btn btn-primary btn-round btn-icon">
-                                                        <em class="icon ni ni-money"></em>
-                                                    </button>
-                                                @endif
-
-                                                @if ($car->pay_status != 'unpaid')
-                                                    <button data-id="{{ $car->id }}" data-toggle="modal"
-                                                        data-target="#modalWhatsApp"
-                                                        class="btn btn-primary btn-round btn-icon">
-                                                        <em class="icon ni ni-send"></em>
-                                                    </button>
-                                                @endif
+                                                    // Convert seconds to minutes and seconds
+                                                    $minutes = floor($differenceInSeconds / 60);
+                                                    $seconds = $differenceInSeconds % 60;
+                                                @endphp
+                                                <span>
+                                                    @if ($minutes > 0)
+                                                        {{ $minutes }} min{{ $minutes > 1 ? 's' : '' }}
+                                                    @endif
+                                                    @if ($seconds > 0)
+                                                        {{ $seconds }} sec{{ $seconds > 1 ? 's' : '' }}
+                                                    @endif
+                                                </span>
+                                            @endif
+                                        </div>
 
 
+                                        <div class="nk-tb-col tb-col-md">
 
-                                            </div>
+                                            @if ($car->pay_status != 'paid')
+                                                <button data-id="{{ $car->id }}" data-toggle="modal"
+                                                    data-target="#modalPayment"
+                                                    class="btn btn-primary btn-round btn-icon">
+                                                    <em class="icon ni ni-money"></em>
+                                                </button>
+                                            @endif
+
+                                            @if ($car->pay_status != 'unpaid')
+                                                <button data-id="{{ $car->id }}" data-toggle="modal"
+                                                    data-target="#modalWhatsApp"
+                                                    class="btn btn-primary btn-round btn-icon">
+                                                    <em class="icon ni ni-send"></em>
+                                                </button>
+                                            @endif
+
+
 
                                         </div>
-                                    @endif
+
+                                    </div>
                                 @endforeach
 
 
                             </div>
+
+                            <!-- pagination .card for Autos Listos -->
+                            <div class="card">
+                                <div class="card-inner">
+                                    <div class="nk-block-between-md g-3">
+                                        <div class="g">
+                                            <ul class="pagination justify-content-center justify-content-md-start">
+                                                @if ($carsReady->onFirstPage())
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link" href="#" tabindex="-1"
+                                                            aria-disabled="true">Prev</a>
+                                                    </li>
+                                                @else
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                            href="{{ $carsReady->previousPageUrl() }}">Prev</a>
+                                                    </li>
+                                                @endif
+
+                                                @if ($carsReady->hasMorePages())
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                            href="{{ $carsReady->nextPageUrl() }}">Next</a>
+                                                    </li>
+                                                @else
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link" href="#" tabindex="-1"
+                                                            aria-disabled="true">Next</a>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End pagination .card -->
+
 
 
 
@@ -348,51 +414,6 @@
 
                             {{-- no-results-message e --}}
 
-
-
-
-                            <!-- pagination .card -->
-                            <div class="card">
-                                <div class="card-inner ">
-                                    <div class="nk-block-between-md g-3">
-                                        <div class="g">
-                                            <!-- Pagination links with custom prev and next buttons -->
-                                            <ul class="pagination justify-content-center justify-content-md-start">
-                                                @if ($cars->onFirstPage())
-                                                    <li class="page-item disabled">
-                                                        <a class="page-link" href="#" tabindex="-1"
-                                                            aria-disabled="true">Prev</a>
-                                                    </li>
-                                                @else
-                                                    <li class="page-item">
-                                                        <a class="page-link"
-                                                            href="{{ $cars->previousPageUrl() }}">Prev</a>
-                                                    </li>
-                                                @endif
-
-                                                @if ($cars->hasMorePages())
-                                                    <li class="page-item">
-                                                        <a class="page-link"
-                                                            href="{{ $cars->nextPageUrl() }}">Next</a>
-                                                    </li>
-                                                @else
-                                                    <li class="page-item disabled">
-                                                        <a class="page-link" href="#" tabindex="-1"
-                                                            aria-disabled="true">Next</a>
-                                                    </li>
-                                                @endif
-                                            </ul>
-                                        </div>
-
-
-
-                                        <!-- .pagination-goto -->
-                                    </div>
-                                    <!-- .nk-block-between -->
-                                </div>
-                                <!-- .card-inner -->
-                            </div>
-                            <!-- pagination .card  end-->
                         </div>
 
 
@@ -592,8 +613,8 @@
                         <h5 class="modal-title">Información del Cliente</h5>
                     </div>
                     <div class="modal-body">
-                        <button class="whatsapp-btn btn btn-primary" data-phone="{{ $car->customer->phone }}"
-                            data-name="{{ $car->customer->name }}">
+                        <button class="whatsapp-btn btn btn-primary" data-phone="{{ $car->customer->phone ?? '' }}"
+                            data-name="{{ $car->customer->name ?? '' }}">
                             <em class="icon ni ni-whatsapp"></em><span class="mx-1"> Enviar WhatsApp</span>
                         </button>
 

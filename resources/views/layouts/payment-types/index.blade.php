@@ -39,14 +39,15 @@
                                         <div class="toggle-expand-content" data-content="more-options">
                                             <ul class="nk-block-tools g-3">
                                                 <li>
-                                                    <div id="clients_filter"
+                                                    {{-- <div id="clients_filter"
                                                         class="form-control-wrap dataTables_filter">
                                                         <div class="form-icon form-icon-right">
                                                             <em class="icon ni ni-search"></em>
                                                         </div>
                                                         <input type="search" class="form-control" id="default-04"
                                                             placeholder="Search by name">
-                                                    </div>
+                                                    </div> --}}
+
                                                 </li>
 
 

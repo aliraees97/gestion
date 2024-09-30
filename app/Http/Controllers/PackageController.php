@@ -12,7 +12,7 @@ class PackageController extends Controller
 
     public function index()
     {
-        $washTypes = Package::latest()->paginate();
+        $washTypes = Package::latest()->paginate(10);
         return view('layouts.wash-types.index', compact('washTypes'));
     }
 
