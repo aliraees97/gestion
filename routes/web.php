@@ -18,6 +18,17 @@ Route::get('/cl', function () {
     return "cache is clear";
 });
 
+Route::get('/migrate-seed', function () {
+    // Run migrations
+    Artisan::call('migrate:fresh', ['--force' => true]);
+
+    // Run seeders
+    Artisan::call('db:seed', ['--force' => true]);
+
+    return "Migration and seeding completed successfully.";
+});
+
+
 
 // Home route
 Route::get('/', function () {
