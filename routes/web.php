@@ -93,15 +93,11 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::post('/close-todays-sale', [ManagementController::class, 'closeTodaySale'])->name('close.daily.sale');
     Route::post('/close-single-sale', [ManagementController::class, 'closeSingleSale'])->name('close.single.sale');
 
-
-    Route::get('/filter-records', [ManagementController::class, 'filterRecords'])->name('filter.records');
-
-
     // new
     Route::get('/get-closed-sales', [ManagementController::class, 'getClosedSales'])->name('get-closed-sales');
     Route::get('/get-todays-sales-total', [ManagementController::class, 'getTodaysSalesTotal'])->name('get-todays-sales-total');
 
-
+    Route::get('/filter-records', [ManagementController::class, 'filterRecords'])->name('filter.records');
 
 
     // Cars  Routes
@@ -116,4 +112,12 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::post('/cars/{id}', [CarController::class, 'completeStatus'])->name('cars-complete');
     Route::post('/payment/{id}', [CarController::class, 'completePayment'])->name('payment-complete');
     Route::post('/mark-as-deliver/{id}', [CarController::class, 'deliverStatus'])->name('mark-as-deliver');
+
+    // Admin Users Routes
+    Route::get('/users', [AdminController::class, 'usersList'])->name('users');
+    Route::Post('/add-admin', [AdminController::class, 'adminStore'])->name('add-admin');
+    Route::get('/delete-admin/{id}', [AdminController::class, 'adminDelete']);
+    Route::post('/admin/update', [AdminController::class, 'adminUpdate']);
+    Route::get('/admin-detail/{id}', [AdminController::class, 'adminDetail']);
+    Route::post('/update-password', [AdminController::class, 'updatePassword'])->name('password.update');
 });

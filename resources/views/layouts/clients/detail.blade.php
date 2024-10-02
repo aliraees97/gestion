@@ -101,7 +101,8 @@
 
 
                                                             <div class="nk-tb-col tb-col-md">
-                                                                @if ($rec->status != 'delivered')
+
+                                                                @if (!in_array($rec->status, ['delivered', 'completed']))
                                                                     <span class="timer"
                                                                         data-created-at="<?php echo $rec->created_at; ?>">
                                                                     </span>

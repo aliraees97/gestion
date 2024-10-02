@@ -144,6 +144,7 @@
 
 
 
+
     <script>
         $(document).ready(function() {
 
@@ -289,6 +290,9 @@
             $('#editWashForm').on('submit', function(e) {
                 e.preventDefault();
 
+                // Clear previous error message
+                $('#price-error').hide().text('');
+
                 $.ajax({
                     url: '/wash-types/update',
                     method: 'POST',
@@ -296,16 +300,26 @@
                     success: function(response) {
                         if (response.success) {
                             $('#editWashModal').modal('hide');
-
-                            location.reload();
-                            // setTimeout(() => location.reload(), 2000);
+                            location.reload(); // Reload the page after successful update
                         } else {
                             console.error('Update failed:', response.success_message);
+                            // Optionally, you can show a general error message in the modal
                         }
                     },
                     error: function(xhr) {
-
                         console.error('AJAX error:', xhr);
+                        if (xhr.status === 422) {
+                            // Validation error
+                            const errors = xhr.responseJSON.errors;
+
+                            // Show the error message for the price field if it exists
+                            if (errors.price) {
+                                $('#price-error').text(errors.price[0]).show();
+                            }
+                        } else {
+                            // Handle other errors (optional)
+                            alert('An unexpected error occurred. Please try again.');
+                        }
                     }
                 });
             });
@@ -320,9 +334,7 @@
 
             $('.edit-servise').on('click', function() {
                 var serviceId = $(this).data('id');
-
                 var serviceName = $(this).data('name');
-
                 var servicePrice = $(this).data('price');
 
                 // Set the modal fields
@@ -331,7 +343,10 @@
                 $('#service-price').val(servicePrice);
             });
 
+
+
             // On form submission
+
             $('#editserviceForm').on('submit', function(e) {
                 e.preventDefault();
 
@@ -348,8 +363,19 @@
                         }
                     },
                     error: function(xhr) {
-
                         console.error('AJAX error:', xhr);
+                        if (xhr.status === 422) {
+                            // Validation error
+                            const errors = xhr.responseJSON.errors;
+
+                            // Show the error message for the price field if it exists
+                            if (errors.price) {
+                                $('#price-error').text(errors.price[0]).show();
+                            }
+                        } else {
+                            // Handle other errors (optional)
+                            alert('An unexpected error occurred. Please try again.');
+                        }
                     }
                 });
             });
@@ -472,8 +498,6 @@
             // Record Sale Update Script E
 
 
-
-
             // Add Car Scripts Start
 
             $('#carForm').on('submit', function(e) {
@@ -511,25 +535,27 @@
                     }
                 });
             });
+
             // Add Car Scripts End
 
 
             // Car status completed Scripts Start
             $('#modalCompleted').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget);
-                var carId = button.data('id');
+                var caRId = button.data('id');
                 var modal = $(this);
 
                 // Store car ID in the modal for later use
-                modal.find('.complete-btn').data('id', carId);
+                modal.find('.complete-btn').data('id', caRId);
             });
 
             // Handle the complete button click
             $('.complete-btn').on('click', function() {
-                var carId = $(this).data('id');
+
+                var caRId = $(this).data('id');
 
                 $.ajax({
-                    url: "{{ route('cars-complete', ':id') }}".replace(':id', carId),
+                    url: "{{ route('cars-complete', ':id') }}".replace(':id', caRId),
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}'
@@ -537,10 +563,11 @@
                     success: function(response) {
 
                         if (response.success) {
-                            window.location.reload();
+                            location.reload(true);
                         }
                     },
                     error: function(xhr) {
+                        console.log('Error occurred: ', xhr);
                         // Handle error
                         alert('Failed to update car status. Please try again.');
                     }
@@ -556,34 +583,39 @@
             $('#modalPayment').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget);
                 var carId = button.data('id');
-
                 var modal = $(this);
-
-                modal.find('.payment-complete').data('id', carId);
+                modal.find('.payment-complete').data('id',
+                    carId);
             });
+
 
             // Handle the complete button click inside the modal
             $('.payment-complete').on('click', function() {
                 var carId = $(this).data('id');
-                var paymentId = $('#payment_id').val();
+                var payId = parseInt($('#pay_id').val(), 10);
 
                 $.ajax({
                     url: "{{ route('payment-complete', ':id') }}".replace(':id', carId),
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
-                        payment_id: paymentId
+                        car_id: carId,
+                        pay_id: payId
                     },
                     success: function(response) {
                         if (response.success) {
-                            window.location.reload();
+                            window.location
+                                .reload(); // Refresh the page if the request is successful
                         }
                     },
                     error: function(xhr) {
                         alert('Failed to update car status. Please try again.');
                     }
                 });
+
+
             });
+
 
 
             // Payment On Car Page completed Scripts End
@@ -762,39 +794,6 @@
             // Close today's sale via AJAX End
 
 
-            // Close Single sale via AJAX
-
-            $(document).on('click', '.confirmSingleSale', function(event) {
-                event.preventDefault();
-
-                var recordId = $(this).data('record-id');
-
-                $.ajax({
-                    url: '{{ route('close.single.sale') }}',
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        record_id: recordId
-                    },
-                    success: function(response) {
-
-                        location.reload();
-                        // Show success message
-                        $('#successMessage').text('Sale closed successfully!').fadeIn().delay(
-                            3000).fadeOut();
-                    },
-                    error: function(xhr) {
-                        alert('Error closing the sale. Please try again.');
-                    }
-                });
-            });
-
-            // Close Single sale via AJAX End
-
-
-
-
-
             // User note update S
 
             $('#modal-note').on('click', function() {
@@ -808,9 +807,12 @@
             // User note update E
 
 
+
+            // modal close Start
             $('.close-modal').on('click', function() {
                 location.reload();
             });
+            // modal close End
 
 
             // for Add New Car on modal  with ajax start
@@ -854,6 +856,9 @@
                         alert('An error occurred while adding the car: ' + errorMessage);
                     }
                 });
+
+
+
             });
 
             // for add car on modal  with ajax end
@@ -957,6 +962,216 @@
 
             // Rocrds filter
 
+
+
+
+
+
+            // Show the modal if there are validation errors (optional)
+
+            @if ($errors->any())
+                $('#modalWash').modal('show');
+            @endif
+
+            // Handle form submission
+            $('#washTypeForm').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+                // Clear previous error messages
+                $('#errorMessages').hide();
+                $('#errorList').empty();
+
+                // Send AJAX request
+                $.ajax({
+                    url: "{{ route('add-washType') }}", // Your form action URL
+                    type: "POST",
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        // Assuming success response is received
+                        $('#modalWash').modal('hide'); // Close the modal
+                        // Optionally, you can append the new wash type to the list or refresh the page
+                        alert('Wash type added successfully!'); // Success message
+                    },
+                    error: function(xhr) {
+                        // Handle validation errors
+                        if (xhr.status === 422) { // Validation error status code
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, value) {
+                                $('#errorList').append('<li>' + value[0] +
+                                    '</li>'); // Display error messages
+                            });
+                            $('#errorMessages').show(); // Show the error message div
+                        }
+                    }
+                });
+            });
+
+
+            // Show the payment method field
+            $('#pay_status').on('change', function() {
+                if ($(this).val() === 'paid') {
+                    $('#payment_method_group').removeClass('d-none');
+                } else {
+                    $('#payment_method_group').addClass('d-none');
+                }
+            });
+            // Show the payment method field
+
+
+
+
+            // Add Admin Scripts Start
+
+            $('#adminForm').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+                // Clear previous error messages
+                $('#errorMessages').addClass('d-none');
+                $('#errorList').empty();
+
+                $.ajax({
+                    url: "{{ route('add-admin') }}",
+                    type: "POST",
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        // Handle success
+                        if (response.success) {
+                            // Redirect to a specific page if necessary
+                            window.location.reload();
+                        }
+                    },
+                    error: function(xhr) {
+                        // Handle validation errors
+                        if (xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+                            $('#errorMessages').removeClass('d-none');
+                            $.each(errors, function(key, value) {
+                                $('#errorList').append('<li>' + value[0] +
+                                    '</li>'
+                                );
+                            });
+                        } else {
+                            // Handle other errors
+                            alert('An error occurred. Please try again later.');
+                        }
+                    }
+                });
+            });
+
+            // Add Admin Scripts End
+
+
+
+
+            // Update Admin Script S
+
+            $('.admin-edit').on('click', function() {
+
+                // Get the  fields
+                var adminId = $(this).data('id');
+                var adminName = $(this).data('name');
+                var adminEmail = $(this).data('email');
+
+
+                // Set the modal fields
+                $('#admin-id').val(adminId);
+                $('#admin-name').val(adminName);
+                $('#admin-email').val(adminEmail);
+
+
+            });
+
+            // On form submission
+            $('#editAdminForm').on('submit', function(e) {
+                e.preventDefault();
+
+                // Clear previous error messages
+                $('#email-error').hide().text('');
+                $('#name-error').hide().text(''); // Added for name field
+
+                $.ajax({
+                    url: '/admin/update',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            $('#modalAdminupdate').modal('hide');
+                            location.reload();
+                        } else {
+                            console.error('Update failed:', response.message);
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('AJAX error:', xhr);
+                        if (xhr.status === 422) {
+                            // Validation error
+                            const errors = xhr.responseJSON.errors;
+
+                            // Show the error messages for the respective fields
+                            if (errors.name) {
+                                $('#name-error').text(errors.name[0]).show();
+                            }
+                            if (errors.email) {
+                                $('#email-error').text(errors.email[0]).show();
+                            }
+                        } else {
+                            // Handle other errors (optional)
+                            alert('An unexpected error occurred. Please try again.');
+                        }
+                    }
+                });
+            });
+
+            // Update Admin Script E
+
+
+
+            // Update Admin Password Script S
+
+            $('.pass-update').on('click', function(e) {
+                e.preventDefault();
+                var userId = $(this).data('id');
+                $('#user-id').val(userId);
+                $('#modalPassupdate').modal('show');
+            });
+
+            // Handle form submission for updating the password
+            $('#passwordUpdateForm').on('submit', function(e) {
+                e.preventDefault();
+
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: '/update-password',
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        if (response.success) {
+
+                            location.reload();
+                        }
+                    },
+                    error: function(xhr) {
+                        // Handle validation errors
+                        var errors = xhr.responseJSON.errors;
+
+                        if (errors.current_password) {
+                            $('#current-password-error').text(errors.current_password).show();
+                        }
+                        if (errors.new_password) {
+                            $('#new-password-error').text(errors.new_password).show();
+                        }
+                        if (errors.new_password_confirmation) {
+                            $('#confirm-password-error').text(errors.new_password_confirmation)
+                                .show();
+                        }
+                    }
+                });
+            });
+
+
+
+            // Update Admin Password Script E
 
 
         });

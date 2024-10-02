@@ -189,19 +189,41 @@
 
         {{--  modal start Add New  Wash Type  --}}
 
-        <div class="modal fade" tabindex="-1" id="modalWash">
+        <div class="modal fade  @if ($errors->any()) show @endif" tabindex="-1" id="modalWash"
+            @if ($errors->any()) style="display: block;" @endif>
+
             <div class="modal-dialog" role="document">
-                <div class="modal-content"> <a href="#" class="close" data-dismiss="modal" aria-label="Close">
-                        <em class="icon ni ni-cross"></em> </a>
+                <div class="modal-content"> <button href="#" class="close close-modal" data-dismiss="modal"
+                        aria-label="Close">
+                        <em class="icon ni ni-cross"></em> </button>
                     <div class="modal-header">
                         <h5 class="modal-title">Agregar Nuevo Wash Type</h5>
                     </div>
                     <div class="modal-body">
+                        <!-- Show general error message if any -->
+                        @if (session('error_message'))
+                            <div class="alert alert-danger">
+                                {{ session('error_message') }}
+                            </div>
+                        @endif
+
+
+                        <!-- Display all validation errors at once -->
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
                         <form action="{{ route('add-washType') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
                             <div class="form-group">
-                                <label for="model">Price</label>
+                                <label for="model">Name</label>
                                 <input type="text" name="name" class="form-control" id="name" required>
                             </div>
                             <div class="form-group">
@@ -238,6 +260,10 @@
                         </button>
                     </div>
                     <div class="modal-body">
+                        <div class="alert alert-danger invalid-feedback" id="price-error" style="display: none;">
+
+                        </div>
+
                         <form id="editWashForm">
                             @csrf
                             <input type="hidden" name="id" id="wash-type-id">
@@ -258,6 +284,8 @@
                 </div>
             </div>
         </div>
+
+
         <!-- Wash Type Update Modal E -->
 
 

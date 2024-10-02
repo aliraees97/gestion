@@ -51,7 +51,7 @@
                                                 <li class="nk-block-tools-opt">
                                                     <a href="#" class="btn btn-icon btn-primary d-md-none"><em
                                                             class="icon ni ni-plus"></em></a>
-                                                    <button data-toggle="modal" data-target="#modalWash"
+                                                    <button data-toggle="modal" data-target="#modalService"
                                                         class="btn btn-primary d-none d-md-inline-flex"><em
                                                             class="icon ni ni-plus"></em>
                                                         <span>Add</span>
@@ -176,9 +176,6 @@
                             <!-- pagination .card  end-->
                         </div>
 
-
-
-
                     </div>
                 </div>
             </div>
@@ -189,14 +186,33 @@
 
         {{--  modal start Add New Service  --}}
 
-        <div class="modal fade" tabindex="-1" id="modalWash">
+        <div class="modal fade @if ($errors->any()) show @endif" tabindex="-1" id="modalService"
+            @if ($errors->any()) style="display: block;" @endif>
             <div class="modal-dialog" role="document">
-                <div class="modal-content"> <a href="#" class="close" data-dismiss="modal" aria-label="Close">
-                        <em class="icon ni ni-cross"></em> </a>
+                <div class="modal-content">
+                    <button type="button" class="close close-modal " data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{-- <a href="#" class="close " data-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a> --}}
                     <div class="modal-header">
                         <h5 class="modal-title">Agregar Nuevo Complementos</h5>
                     </div>
                     <div class="modal-body">
+
+                        <!-- Display all validation errors at once -->
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+
                         <form action="{{ route('add-services') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
@@ -240,6 +256,9 @@
 
                     <div class="modal-body">
 
+                        <div class="alert alert-danger invalid-feedback" id="price-error" style="display: none;">
+                        </div>
+
                         <form id="editserviceForm">
                             @csrf
                             <input type="hidden" name="id" id="service-id">
@@ -259,6 +278,7 @@
                             <button type="submit" class="btn btn-primary">Guardar cambios
                             </button>
                         </form>
+
                     </div>
                 </div>
             </div>

@@ -103,7 +103,7 @@
                                                         <span
                                                             class="tb-lead">{{ htmlspecialchars($car->customer->name ?? '') }}
                                                             <span class="dot dot-success d-md-none ms-1"></span></span>
-                                                        <span>{{ htmlspecialchars($car->customer->email ?? '') }}</span>
+                                                        <span>{{ htmlspecialchars($car->customer->phone ?? '') }}</span>
                                                     </div>
                                                 </div>
                                             </a>
@@ -141,7 +141,8 @@
                                             @if ($car->pay_status != 'paid')
                                                 <span class="tb-status text-danger">No</span>
                                             @else
-                                                <span class="tb-status text-success">Yes</span>
+                                                <span
+                                                    class="tb-status text-success">{{ $car->payment->name ?? '' }}</span>
                                             @endif
                                         </div>
 
@@ -256,7 +257,7 @@
                                                         <span
                                                             class="tb-lead">{{ htmlspecialchars($car->customer->name ?? '') }}
                                                             <span class="dot dot-success d-md-none ms-1"></span></span>
-                                                        <span>{{ htmlspecialchars($car->customer->email ?? '') }}</span>
+                                                        <span>{{ htmlspecialchars($car->customer->phone ?? '') }}</span>
                                                     </div>
                                                 </div>
                                             </a>
@@ -294,7 +295,8 @@
                                             @if ($car->pay_status != 'paid')
                                                 <span class="tb-status text-danger">No</span>
                                             @else
-                                                <span class="tb-status text-success">Yes</span>
+                                                <span
+                                                    class="tb-status text-success">{{ $car->payment->name ?? '' }}</span>
                                             @endif
                                         </div>
 
@@ -430,7 +432,8 @@
         <!-- content @e -->
 
         {{--  modal start Add New car  --}}
-        <div class="modal fade" tabindex="-1" id="modalCar">
+
+        <div class="modal fade" id="modalCar">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <a href="#" class="close" data-dismiss="modal" aria-label="Close">
@@ -447,9 +450,12 @@
 
                         <form id="carForm" method="POST" enctype="multipart/form-data">
                             @csrf
+
                             <div class="form-group">
                                 <label for="customer_id">Client</label>
-                                <select name="customer_id" id="customer_id" class="form-control" required>
+                                <select name="customer_id" id="customer_id"
+                                    class="form-control form-select js-select2 select2-hidden-accessible"
+                                    data-search="on" data-select2-id="6" tabindex="-1" aria-hidden="true" required>
                                     <option value="">Select Client</option>
                                     @foreach ($customer as $cust)
                                         <option value="{{ $cust->id }}">{{ $cust->name }}</option>
@@ -460,6 +466,7 @@
                                         data-target="#modalClient">Create a New Client</a>
                                 </div>
                             </div>
+
 
                             <div class="form-group">
                                 <label for="name">Nombre</label>
@@ -513,6 +520,17 @@
                                 </select>
                             </div>
 
+                            <div class="form-group d-none" id="payment_method_group">
+                                <label for="payment_id">Payment Method</label>
+                                <select name="payment_id" id="payment_id" class="form-control" required>
+                                    {{-- <option value="">Select Payment Method</option> --}}
+                                    @foreach ($payments as $pay)
+                                        <option value="{{ $pay->id }}">{{ $pay->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+
                             <div class="form-group d-flex justify-content-between">
                                 <button type="submit" class="btn btn-primary">Guardar registro</button>
                                 <button class="btn btn-danger close-modal ml-auto"
@@ -561,8 +579,6 @@
         {{-- Mark as completed Modal End --}}
 
 
-
-
         {{-- Payment Completed Modal Start --}}
 
         <div class="modal fade" tabindex="-1" id="modalPayment">
@@ -576,16 +592,17 @@
                     </div>
                     <div class="modal-body">
                         <!-- Payment Method Selection -->
-                        <div class="form-group">
-                            <label for="payment_id">Método de Pago</label>
 
-                            <select name="payment_id" id="payment_id" class="form-control" required>
-                                <option value="">Select Payment Method</option>
+                        <div class="form-group">
+                            <label for="pay_id">Método de Pago</label>
+                            <select name="pay_id" id="pay_id" class="form-control" required>
                                 @foreach ($payments as $pay)
                                     <option value="{{ $pay->id }}">{{ $pay->name }}</option>
                                 @endforeach
                             </select>
                         </div>
+
+
                         <div class="nk-modal-action">
                             <button type="button" class="btn btn-lg btn-mw btn-primary payment-complete">Completar
                                 Pago</button>
@@ -601,7 +618,7 @@
 
 
 
-        {{-- Payment Completed Modal Start --}}
+        {{-- WhatsApp  Modal Start --}}
 
         <div class="modal fade" tabindex="-1" id="modalWhatsApp">
             <div class="modal-dialog" role="document">
@@ -628,7 +645,7 @@
             </div>
         </div>
 
-        {{--  Payment Completed Modal End --}}
+        {{--  WhatsApp  Modal End --}}
 
 
 
@@ -761,5 +778,7 @@
 </div>
 <!-- main end -->
 
+
+{{-- select2 search --}}
 
 @include('partials.scripts')

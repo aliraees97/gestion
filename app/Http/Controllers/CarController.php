@@ -61,6 +61,7 @@ class CarController extends Controller
 
     public function carStore(Request $request)
     {
+
         // Validate the incoming request data
         $validator = Validator::make($request->all(), [
             'customer_id' => 'required',
@@ -89,6 +90,7 @@ class CarController extends Controller
             $car->license_plate = $request->license_plate;
             $car->color = $request->color;
             $car->package_id = $request->package_id;
+            $car->payment_id = $request->payment_id;
             $car->services = json_encode($request->services);
             $car->pay_status = $request->pay_status;
             $car->save();
@@ -163,6 +165,7 @@ class CarController extends Controller
 
     public function completePayment($id, Request $request)
     {
+
         // Retrieve the car by ID
         $car = Car::findOrFail($id);
 
@@ -177,8 +180,6 @@ class CarController extends Controller
 
         // Decode the services JSON string into an array
         $servicesArray = json_decode($car->services, true);
-
-        // If decoding fails, return an error
         if (json_last_error() !== JSON_ERROR_NONE) {
             return response()->json(['success' => false, 'message' => 'Invalid services format.']);
         }
@@ -189,27 +190,30 @@ class CarController extends Controller
         // Calculate total price
         $totalPrice = $packagePrice + $servicePrices->sum();
 
-        // Check if payment_id is provided
-        if (!$request->payment_id) {
+        // Check if payment_id is provided and valid
+        if (!$request->has('pay_id')) {
             return response()->json(['success' => false, 'message' => 'Payment method is required.']);
         }
 
         // Create a record of the sale
         RecordSale::create([
             'car_id' => $car->id,
-            'payment_id' => $request->payment_id,
+            'payment_id' => $request->pay_id,
             'total' => $totalPrice,
         ]);
 
+        // Update car's payment status
         $car->pay_status = 'paid';
+        $car->payment_id = $request->pay_id;
         $car->save();
 
         // Flash success message
-        Session::flash('success_message', 'Payment Method updated successfully!');
+        Session::flash('success_message', 'Payment completed successfully!');
 
         // Return success response to the AJAX request
         return response()->json(['success' => true]);
     }
+
 
     public function deliverStatus($id)
     {

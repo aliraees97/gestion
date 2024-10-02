@@ -19,7 +19,7 @@ class ServiceController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
-            'price' => 'required',
+            'price' => 'required|numeric',
 
         ]);
 

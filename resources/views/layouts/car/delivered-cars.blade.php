@@ -138,7 +138,8 @@
                                             @if ($car->pay_status != 'paid')
                                                 <span class="tb-status text-danger">No</span>
                                             @else
-                                                <span class="tb-status text-success">Yes</span>
+                                                <span
+                                                    class="tb-status text-success">{{ $car->payment->name ?? '' }}</span>
                                             @endif
                                         </div>
 
